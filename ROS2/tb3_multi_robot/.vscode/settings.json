@@ -1,0 +1,19 @@
+{
+    "ROS2.distro": "jazzy",
+    "python.autoComplete.extraPaths": [
+        "/home/asd/robot_ws/install/tb3_multi_robot/lib/python3.12/site-packages",
+        "/home/asd/robot_ws/install/speed_controller/lib/python3.12/site-packages",
+        "/home/asd/ros2_ws/install/yahboom_rosmaster_navigation/lib/python3.12/site-packages",
+        "/home/asd/ros2_ws/install/yahboom_rosmaster_msgs/lib/python3.12/site-packages",
+        "/home/asd/ros2_ws/install/four_robot_gazebo/lib/python3.12/site-packages",
+        "/opt/ros/jazzy/lib/python3.12/site-packages"
+    ],
+    "python.analysis.extraPaths": [
+        "/home/asd/robot_ws/install/tb3_multi_robot/lib/python3.12/site-packages",
+        "/home/asd/robot_ws/install/speed_controller/lib/python3.12/site-packages",
+        "/home/asd/ros2_ws/install/yahboom_rosmaster_navigation/lib/python3.12/site-packages",
+        "/home/asd/ros2_ws/install/yahboom_rosmaster_msgs/lib/python3.12/site-packages",
+        "/home/asd/ros2_ws/install/four_robot_gazebo/lib/python3.12/site-packages",
+        "/opt/ros/jazzy/lib/python3.12/site-packages"
+    ]
+}

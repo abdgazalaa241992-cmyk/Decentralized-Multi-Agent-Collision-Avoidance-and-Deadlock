@@ -1,0 +1,43 @@
+# ---------------------------------------------------------------------------
+#  RSVC + dynamic vector steering -- TurtleBot3 / Gazebo configuration
+# ---------------------------------------------------------------------------
+method: proposed            # proposed | rsvc   (can be overridden with --method)
+log_dir: ~/rsvc_logs        # one sub-folder per run
+rate_hz: 10.0               # control rate
+use_sim_time: true          # use the Gazebo clock
+use_twist_stamped: true     # ROS 2 Jazzy TurtleBot3 uses TwistStamped on cmd_vel
+namespace_format: "/{name}" # topics: /tb1/odom, /tb1/scan, /tb1/cmd_vel
+max_time: 300.0             # wall-clock limit of one run (s)
+omega_max: 1.82             # rad/s  (TurtleBot3 Waffle)
+omega_gain: 2.0             # angular speed for a 90 deg heading error (lower = less oscillation)
+lidar_offset: [-0.064, 0.0] # LiDAR position w.r.t. base centre (Waffle)
+estop_distance: 0.35        # m: emergency stop of translation if an object is closer than
+                            #    this in the driving direction (0 = disabled); logged as "estop"
+estop_half_angle_deg: 60.0
+
+controller:                 # see rsvc_core.RSVCParams
+  v_max: 0.22
+  a_max: 0.5
+  k_g: 0.5
+  robot_radius: 0.27        # from the wheel axle to the farthest body corner of a Waffle
+  margin: 0.20              # safety distance d_s = 0.47 m (centre -> other surface)
+  avoid_radius: 1.20        # R_a
+  rot_rate_min: 0.24        # rad/s
+  rot_rate_max: 0.27        # rad/s
+  decay_factor: 2.0
+  theta_max_deg: 90.0
+  deadlock_speed: 0.11      # = 0.5 v_max
+  goal_tol: 0.20
+  cluster_gap: 0.15
+
+# Goals in the WORLD frame (Gazebo). Spawn poses from robots.yaml of
+# tb3_multi_robot: the robots start at the corners of a 4 x 4 m square and
+# each goal is the opposite corner (diagonal swap through the centre).
+# odom_offset = [x, y, yaw] of the spawn pose: each robot's /odom starts at
+# (0, 0) at its own spawn point, so the offset converts odom -> world.
+# Check at start-up: the printed start poses must be (-2,-2), (2,-2), (2,2), (-2,2).
+robots:
+  tb1: {goal: [ 2.0,  2.0], odom_offset: [-2.0, -2.0, 0.0]}
+  tb2: {goal: [-2.0,  2.0], odom_offset: [ 2.0, -2.0, 0.0]}
+  tb3: {goal: [-2.0, -2.0], odom_offset: [ 2.0,  2.0, 0.0]}
+  tb4: {goal: [ 2.0, -2.0], odom_offset: [-2.0,  2.0, 0.0]}
