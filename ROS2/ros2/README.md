@@ -9,7 +9,6 @@ Robotarium code (thesis Chapter 4), with neighbours detected by the LiDAR.
 | `rsvc_node.py` | ROS 2 node, one per robot (`--robot tb1`) or all robots in one process (`--all`); writes CSV logs |
 | `rsvc_params.yaml` | Robots, goals, parameters |
 | `ros2_analyze.py` | Logs -> figures + LaTeX table, written directly into the thesis project |
-| `test_offline.py` | Test of the node without ROS/Gazebo (fake ROS + simple simulator); NOT thesis data |
 
 ## 1. Run in Gazebo
 
@@ -36,7 +35,7 @@ The baseline is expected to stop in the centre; stop it with Ctrl+C after
 prints `x=0 y=0`, the odometry is relative to the spawn pose: put the spawn
 poses in `odom_offset` in `rsvc_params.yaml` and run again.
 
-## 2. Put the results into the thesis
+## 2. Produce the figures and table
 
 ```bash
 python3 ros2_analyze.py ~/rsvc_logs/proposed_1 ~/rsvc_logs/rsvc_1 \
@@ -45,12 +44,4 @@ python3 ros2_analyze.py ~/rsvc_logs/proposed_1 ~/rsvc_logs/rsvc_1 \
 
 This writes `../figures/ros2_traj.pdf`, `ros2_theta.pdf`, `ros2_cmd.pdf`,
 `ros2_dist.pdf` and `../experiments/results/ros2_table.tex`. Recompile the
-thesis: Section 5.3 includes them automatically. Then write the short
-discussion asked for in the TODO box of Section 5.3.
-
-## Offline test (no ROS needed)
-
-```bash
-python3 test_offline.py --method proposed
-python3 test_offline.py --method rsvc
-```
+thesis: Section 5.3 includes them automatically.
