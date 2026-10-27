@@ -7,10 +7,11 @@ law) with **dynamic vector steering**: when a robot detects that it is stuck
 (a deadlock), it gradually rotates its preferred velocity until it escapes, and
 then "unwinds" the rotation back to zero once it moves freely again.
 
-The same control law is validated on two platforms:
+The same control law is validated on three platforms:
 
 | Platform | Robots | Scenario | Folder |
 |---|---|---|---|
+| **Robotarium Python simulator** (Monte Carlo study) | 2–12 GRITSbots | Antipodal circle swap, 30 randomized trials per team size; comparison with RSVC, RSVC + noise and the Robotarium barrier certificates (SBC) | [`simulation/`](simulation/) |
 | **Robotarium** (Georgia Tech, physical testbed) | 10 GRITSbots | Antipodal circle swap (each robot goes to the opposite point of a circle of radius 0.8 m) | [`robotarium/`](robotarium/) |
 | **ROS 2 Jazzy + Gazebo Harmonic** (simulation) | 4 TurtleBot3 Waffle | Diagonal corner swap on a 4 × 4 m square, neighbours detected with LiDAR | [`ROS2/`](ROS2/) |
 
@@ -49,6 +50,20 @@ The baseline (`rsvc`) is the same law with `theta` fixed at 0.
 ```
 .
 ├── README.md                     ← this file
+├── simulation/                   Robotarium-simulator study (Monte Carlo, ablations)
+│   ├── code/
+│   │   └── rsvc_steering.py            simulator script of the ten-agent results
+│   ├── experiments/
+│   │   ├── rsvc_agent.py               the controller, with switches for the baselines
+│   │   ├── run_trial.py                one trial: scenario, simulation, metrics
+│   │   ├── montecarlo.py               all trials → CSV
+│   │   ├── ablation.py                 ablation of theta_max and of the unwinding
+│   │   ├── symmetric.py                perfectly symmetric cases (no noise)
+│   │   ├── margin_study.py             angular margin vs. escape analysis
+│   │   ├── analyze.py                  CSV → table + figures
+│   │   └── results/                    CSV files and trajectories reported in the thesis
+│   └── figures/                        mc_*.pdf, margin_vs_escape.pdf
+│
 ├── robotarium/                   Physical Robotarium experiment (10 GRITSbots)
 │   ├── code/
 │   │   ├── rsvc_robotarium_submit.py   script submitted to the Robotarium testbed
@@ -78,6 +93,31 @@ The baseline (`rsvc`) is the same law with `theta` fixed at 0.
         ├── ros2_deadlock_static_obstacle.mp4
         └── ros2_deadlock_solved.mp4
 ```
+
+---
+
+## 0. Reproducing the simulation study (Monte Carlo)
+
+### Requirements
+```bash
+pip install numpy scipy matplotlib pandas cvxopt
+pip install git+https://github.com/robotarium/robotarium_python_simulator.git
+```
+
+### Run
+```bash
+cd simulation/code
+python rsvc_steering.py                      # ten-agent circle swap with graphics
+
+cd ../experiments
+python run_trial.py                          # quick test: one run of each method, N = 10
+python montecarlo.py --trials 30 --out results/mc.csv   # main study
+python ablation.py                           # theta_max and unwinding ablations
+python symmetric.py                          # perfectly symmetric cases
+python analyze.py results/mc.csv             # table + figures
+```
+Outputs go to `simulation/experiments/results/` and `simulation/figures/`.
+More details: [`simulation/experiments/README.md`](simulation/experiments/README.md).
 
 ---
 
